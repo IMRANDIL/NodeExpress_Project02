@@ -2,6 +2,7 @@
 :root{
     --main-bg-color:#eff5fe;
     --border-color:#0288d147;
+    --container-width:500px;
 }
 
 
@@ -14,7 +15,7 @@ body, html{
 
 }
 
-body, .drop-zone{
+body, .drop-zone, .upload-container{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -91,4 +92,80 @@ body, .drop-zone{
 
 .dragged .icon-container .center{
     transform: translateY(-5px);
+}
+
+.progress-container{
+    width: var(--container-width);
+    height: 70px;
+    border: 2px solid var(--main-bg-color);
+    margin-bottom: 25px;
+    border-radius: 10px;
+    position: relative;
+    display: none;
+}
+
+
+.progress-container .bg-progress{
+    background: rgb(134, 88, 88);
+    width: 0%;
+    height: 100%;
+    border-radius: 2%;
+   transition: width .25s linear;
+  
+    position: absolute;
+   
+}
+
+
+.progress-container .inner-container{
+    position: absolute;
+    z-index: 1;
+    margin: 10px 15px;
+    width: calc(100% - 30px)
+}
+
+
+.percent-container{
+    font-size: 13px;
+    margin: 5px;
+}
+
+.progress-bar{
+    height: 3px;
+    width: 100%;
+    background-color: fuchsia;
+    border-radius: 2px;
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform .25s linear;
+}
+
+.sharing-container{
+    width: var(--container-width);
+    margin-bottom: 10px;
+}
+
+.sharing-container .input-container{
+    position: relative;
+}
+
+.sharing-container .input-container input{
+width: 100%;
+border: 2px dashed var(--border-color);
+border-radius: 6px;
+padding: 10px 15px;
+box-sizing: border-box;
+font-size: 20px;
+background-color: #f5fcff;
+color: #0000008c;
+}
+
+.input-container img{
+    position: absolute;
+    height: 22px;
+    width: 30px;
+    right: 7px;
+    top: 10px;
+    background-color: #f7fdff;
+    cursor: pointer;
 }
