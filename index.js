@@ -4,9 +4,14 @@ const browseBtn = document.querySelector('.browseBtn');
 const bgProgress = document.querySelector('.bg-progress');
 const percentProgress = document.querySelector('#percent');
 const progressBar = document.querySelector('.progress-bar');
-const progressContainer = document.querySelector('.progress-container')
+const progressContainer = document.querySelector('.progress-container');
+const sharingContainer = document.querySelector('.sharing-container');
+const copyBtn = document.querySelector('#copyBtn');
+const fileUrl = document.querySelector('#fileUrl');
+const emailForm = document.querySelector('#emailForm');
 const host = 'https://innshare.herokuapp.com/';
 const uploadUrl = `${host}api/files`;
+const emailUrl = `${host}api/files/send`;
 dropZone.addEventListener('dragover', (e) => {
     e.preventDefault()
     if (!dropZone.classList.contains('dragged')) {
@@ -39,6 +44,39 @@ browseBtn.addEventListener('click', () => {
 
 fileInput.addEventListener('change', () => {
     uploadFile()
+});
+
+copyBtn.addEventListener('click', () => {
+    fileUrl.select();
+    document.execCommand('copy')
+});
+
+emailForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const url = fileUrl.value;
+
+    const formData = {
+        uuid: url.split('/').splice(-1, 1)[0],
+        emailTo: emailForm.elements['To-email'].value,
+        emailFrom: emailForm.elements['from-email'].value
+    }
+    console.table(formData)
+    emailForm[2].setAttribute('disabled', 'true')
+    fetch(emailUrl, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+    }).then((result) => {
+
+        result.json();
+    }).then(({ success }) => {
+        if (success) {
+            sharingContainer.style.display = 'none';
+        }
+    })
+
 })
 
 const uploadFile = () => {
@@ -74,6 +112,9 @@ const updateProgress = (e) => {
 
 
 const showLink = ({ file }) => {
-    progressContainer.style.display = 'none'
-    console.log(file);
+    fileUrl.value = '';
+    emailForm[2].removeAttribute('disabled')
+    progressContainer.style.display = 'none';
+    sharingContainer.style.display = 'block'
+    fileUrl.value = file;
 }
