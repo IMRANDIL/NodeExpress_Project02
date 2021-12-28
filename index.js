@@ -9,6 +9,12 @@ const sharingContainer = document.querySelector('.sharing-container');
 const copyBtn = document.querySelector('#copyBtn');
 const fileUrl = document.querySelector('#fileUrl');
 const emailForm = document.querySelector('#emailForm');
+const Toast = document.querySelector('.toast');
+
+const maxSize = 100 * 1024 * 1024
+
+
+
 const host = 'https://innshare.herokuapp.com/';
 const uploadUrl = `${host}api/files`;
 const emailUrl = `${host}api/files/send`;
@@ -48,7 +54,9 @@ fileInput.addEventListener('change', () => {
 
 copyBtn.addEventListener('click', () => {
     fileUrl.select();
-    document.execCommand('copy')
+    document.execCommand('copy');
+
+    showMsg('Copied To Clipboard')
 });
 
 emailForm.addEventListener('submit', (e) => {
@@ -74,15 +82,28 @@ emailForm.addEventListener('submit', (e) => {
     }).then(({ success }) => {
         if (success) {
             sharingContainer.style.display = 'none';
+            showMsg('Email Sent To The Said Address')
         }
     })
 
 })
 
 const uploadFile = () => {
-    progressContainer.style.display = 'block'
-    const file = fileInput.files[0];
 
+    if (fileInput.files.length > 1) {
+        fileUrl.value = '';
+        return showMsg('Only 1 File Can be Uploaded');
+
+    }
+
+
+    const file = fileInput.files[0];
+    if (file.size > maxSize) {
+        fileUrl.value = '';
+        showMsg('Max File Size:100mb')
+    }
+
+    progressContainer.style.display = 'block';
     const formData = new FormData();
     formData.append('myfile', file)
     const xhr = new XMLHttpRequest();
@@ -92,6 +113,10 @@ const uploadFile = () => {
         }
     }
     xhr.upload.onprogress = updateProgress;
+    xhr.upload.onerror = () => {
+        fileUrl.value = '';
+        showMsg(`Error in Upload: ${xhr.statusText}`)
+    }
 
     xhr.open('POST', uploadUrl);
     xhr.send(formData)
@@ -117,4 +142,14 @@ const showLink = ({ file }) => {
     progressContainer.style.display = 'none';
     sharingContainer.style.display = 'block'
     fileUrl.value = file;
+}
+
+
+const showMsg = (msg) => {
+    Toast.innerText = msg;
+    Toast.style.transform = `translate(-50%,0)`;
+
+    setTimeout(() => {
+        Toast.style.transform = `translate(-50%,60px)`;
+    }, 3000);
 }
