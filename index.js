@@ -151,9 +151,9 @@ const showLink = ({ file }) => {
 
 const showMsg = (msg) => {
     Toast.innerText = msg;
-    Toast.style.transform = `translate(-50%,0)`;
+    Toast.style.transform = `translate(-50%, 0)`;
 
     setTimeout(() => {
-        Toast.style.transform = `translate(-50%,60px)`;
+        Toast.style.transform = `translate(-50%,75px)`;
     }, 3000);
 }
