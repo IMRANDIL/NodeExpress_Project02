@@ -15,9 +15,13 @@ const maxSize = 100 * 1024 * 1024
 
 
 
-const host = 'https://innshare.herokuapp.com/';
+const host = 'https://inshare-aia.herokuapp.com/';
 const uploadUrl = `${host}api/files`;
 const emailUrl = `${host}api/files/send`;
+
+
+
+
 dropZone.addEventListener('dragover', (e) => {
     e.preventDefault()
     if (!dropZone.classList.contains('dragged')) {
@@ -77,8 +81,8 @@ emailForm.addEventListener('submit', (e) => {
         },
         body: JSON.stringify(formData)
     }).then((result) => {
-
-        result.json();
+        console.log(result);
+        return result.json();
     }).then(({ success }) => {
         if (success) {
             sharingContainer.style.display = 'none';
