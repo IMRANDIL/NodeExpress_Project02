@@ -81,7 +81,7 @@ emailForm.addEventListener('submit', (e) => {
         },
         body: JSON.stringify(formData)
     }).then((result) => {
-        console.log(result);
+        // console.log(result);
         return result.json();
     }).then(({ success }) => {
         if (success) {
